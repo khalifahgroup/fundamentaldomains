@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crystallographic Point Group Selector</title>
+    <title>Optimal HKL selector</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -113,17 +113,17 @@
 <body>
 
 <div class="container">
-    <h2>Equivalent reflections in powder diffraction</h2>
+    <h2>Optimal HKL selector</h2>
     <form id="crystalForm" onsubmit="handleSubmit(event)">
         
-        <!-- Laue class dropdown grouped by Crystal System -->
+        <!-- 32 Point Groups Dropdown grouped by Crystal System -->
         <div class="form-group">
             <label for="pointGroup">Laue class:</label>
             <select id="pointGroup" required>
-                <option value="" disabled selected>-- Select a Point Group --</option>
+                <option value="" disabled selected>-- Select Laue class --</option>
                 
                 <optgroup label="Triclinic">
-                    <option value="-1">-1</option>
+                    <option value="-1">-1 (Ci)</option>
                 </optgroup>
                 
                 <optgroup label="Monoclinic">
@@ -150,10 +150,7 @@
                 </optgroup>
                 
                 <optgroup label="Cubic">
-                    <option value="23">23 (T)</option>
                     <option value="m-3">m-3 (Th)</option>
-                    <option value="432">432 (O)</option>
-                    <option value="-43m">-43m (Td)</option>
                     <option value="m-3m">m-3m (Oh)</option>
                 </optgroup>
             </select>
@@ -164,13 +161,13 @@
             <label>Miller Indices (h, k, l):</label>
             <div class="miller-indices">
                 <div class="index-field">
-                    <input type="number" id="hIndex" placeholder="h" required>
+                    <input type="number" id="hIndex" placeholder="H" required>
                 </div>
                 <div class="index-field">
-                    <input type="number" id="kIndex" placeholder="k" required>
+                    <input type="number" id="kIndex" placeholder="K" required>
                 </div>
                 <div class="index-field">
-                    <input type="number" id="lIndex" placeholder="l" required>
+                    <input type="number" id="lIndex" placeholder="L" required>
                 </div>
             </div>
         </div>
