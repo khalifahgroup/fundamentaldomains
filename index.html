@@ -113,57 +113,39 @@
 <body>
 
 <div class="container">
-    <h2>Crystallography Input</h2>
+    <h2>Equivalent reflections in powder diffraction</h2>
     <form id="crystalForm" onsubmit="handleSubmit(event)">
         
-        <!-- 32 Point Groups Dropdown grouped by Crystal System -->
+        <!-- Laue class dropdown grouped by Crystal System -->
         <div class="form-group">
-            <label for="pointGroup">Point Group (Hermann-Mauguin / Schoenflies):</label>
+            <label for="pointGroup">Laue class:</label>
             <select id="pointGroup" required>
                 <option value="" disabled selected>-- Select a Point Group --</option>
                 
                 <optgroup label="Triclinic">
-                    <option value="1">1 (C1)</option>
-                    <option value="-1">-1 (Ci)</option>
+                    <option value="-1">-1</option>
                 </optgroup>
                 
                 <optgroup label="Monoclinic">
-                    <option value="2">2 (C2)</option>
-                    <option value="m">m (Cs)</option>
                     <option value="2/m">2/m (C2h)</option>
                 </optgroup>
                 
                 <optgroup label="Orthorhombic">
-                    <option value="222">222 (D2 / V)</option>
-                    <option value="mm2">mm2 (C2v)</option>
                     <option value="mmm">mmm (D2h / Vh)</option>
                 </optgroup>
                 
                 <optgroup label="Tetragonal">
-                    <option value="4">4 (C4)</option>
-                    <option value="-4">-4 (S4)</option>
                     <option value="4/m">4/m (C4h)</option>
-                    <option value="422">422 (D4)</option>
-                    <option value="4mm">4mm (C4v)</option>
-                    <option value="-42m">-42m (D2d / Vd)</option>
                     <option value="4/mmm">4/mmm (D4h)</option>
                 </optgroup>
                 
                 <optgroup label="Trigonal">
-                    <option value="3">3 (C3)</option>
                     <option value="-3">-3 (C3i / S6)</option>
-                    <option value="32">32 (D3)</option>
-                    <option value="3m">3m (C3v)</option>
                     <option value="-3m">-3m (D3d)</option>
                 </optgroup>
                 
                 <optgroup label="Hexagonal">
-                    <option value="6">6 (C6)</option>
-                    <option value="-6">-6 (C3h)</option>
                     <option value="6/m">6/m (C6h)</option>
-                    <option value="622">622 (D6)</option>
-                    <option value="6mm">6mm (C6v)</option>
-                    <option value="-6m2">-6m2 (D3h)</option>
                     <option value="6/mmm">6/mmm (D6h)</option>
                 </optgroup>
                 
