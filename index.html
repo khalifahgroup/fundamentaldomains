@@ -181,6 +181,57 @@
 </div>
 
 <script>
+function generateHKLs(point_group, h, k, l, fpairs) {
+  const equiv_hkls = [];
+  const allhkls = [];
+
+  const isZero = x => x === 0;
+
+  for (const base_hkl in point_group) {
+    const cond =
+      (
+        (isZero(h) === (base_hkl[0] === "0")) &&
+        (isZero(k) === (base_hkl[1] === "0")) &&
+        (isZero(l) === (base_hkl[2] === "0"))
+      ) ||
+      base_hkl === "hkl";
+
+    if (cond) {
+      for (const equiv of point_group[base_hkl]) {
+        const equiv_hkl = [0, 0, 0];
+
+        for (let i = 0; i < 3; i++) {
+          let expression = equiv[i]
+            .replace(/h/g, h.toString())
+            .replace(/k/g, k.toString())
+            .replace(/l/g, l.toString());
+
+          // Safe arithmetic evaluation
+          equiv_hkl[i] = Function(`"use strict"; return (${expression});`)();
+        }
+
+        equiv_hkls.push(equiv_hkl);
+
+        if (fpairs) {
+          equiv_hkls.push(equiv_hkl.map(v => -v));
+        }
+      }
+    }
+  }
+
+  // Deduplicate
+  for (const equiv of equiv_hkls) {
+    const key = equiv.toString();
+    if (!allhkls.some(x => x.toString() === key)) {
+      allhkls.push(equiv);
+    }
+  }
+
+  return allhkls;
+}
+
+
+	
     function handleSubmit(event) {
         // Prevent page from refreshing on form submission
         event.preventDefault();
@@ -191,6 +242,62 @@
         const k = document.getElementById('kIndex').value;
         const l = document.getElementById('lIndex').value;
 
+		if (pointGroup == "-1"): {
+			const json_obj = {
+			  "hkl": [
+				[
+				  "h",
+				  " k",
+				  " l"
+				]
+			  ],
+			  "hk0": [
+				[
+				  "h",
+				  " k",
+				  " 0"
+				]
+			  ],
+			  "h0l": [
+				[
+				  "h",
+				  " 0",
+				  " l"
+				]
+			  ],
+			  "0kl": [
+				[
+				  "0",
+				  " k",
+				  " l"
+				]
+			  ],
+			  "h00": [
+				[
+				  "h",
+				  " 0",
+				  " 0"
+				]
+			  ],
+			  "0k0": [
+				[
+				  "0",
+				  " k",
+				  " 0"
+				]
+			  ],
+			  "00l": [
+				[
+				  "0",
+				  " 0",
+				  " l"
+				]
+			  ]
+			};
+		}
+		
+		allhkls = generateHKLs(pointGroup, h, k, l, true)
+
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
         outputDiv.style.display = 'block';
@@ -198,6 +305,7 @@
             <strong>Submission Received:</strong><br>
             • Point Group: <strong>${pointGroup}</strong><br>
             • Miller Indices: <strong>(${h} ${k} ${l})</strong>
+            • Equivalent HKLs: <strong>(${allhkls})</strong>
         `;
     }
 </script>
