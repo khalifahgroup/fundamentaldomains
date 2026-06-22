@@ -181,6 +181,193 @@
 </div>
 
 <script>
+// ---------------------------------------------
+// 11 Laue classes and their symmetry operators
+// Each operator is a triple of expressions in h,k,l
+// ---------------------------------------------
+const LAUE_OPERATORS = {
+  "-1": [
+    ["h", "k", "l"],
+    ["-h", "-k", "-l"]
+  ],
+
+  "2/m": [
+    ["h", "k", "l"],
+    ["-h", "-k", "l"],
+    ["h", "-k", "-l"],
+    ["-h", "k", "-l"]
+  ],
+
+  "mmm": [
+    ["h", "k", "l"],
+    ["-h", "k", "l"],
+    ["h", "-k", "l"],
+    ["h", "k", "-l"],
+    ["-h", "-k", "l"],
+    ["-h", "k", "-l"],
+    ["h", "-k", "-l"],
+    ["-h", "-k", "-l"]
+  ],
+
+  "4/m": [
+    ["h", "k", "l"],
+    ["-k", "h", "l"],
+    ["-h", "-k", "l"],
+    ["k", "-h", "l"],
+    ["h", "k", "-l"],
+    ["-k", "h", "-l"],
+    ["-h", "-k", "-l"],
+    ["k", "-h", "-l"]
+  ],
+
+  "4/mmm": [
+    ["h", "k", "l"],
+    ["-k", "h", "l"],
+    ["-h", "-k", "l"],
+    ["k", "-h", "l"],
+    ["h", "k", "-l"],
+    ["-k", "h", "-l"],
+    ["-h", "-k", "-l"],
+    ["k", "-h", "-l"],
+    ["k", "h", "l"],
+    ["-h", "k", "l"],
+    ["-k", "-h", "l"],
+    ["h", "-k", "l"],
+    ["k", "h", "-l"],
+    ["-h", "k", "-l"],
+    ["-k", "-h", "-l"],
+    ["h", "-k", "-l"]
+  ],
+
+  "-3": [
+    ["h", "k", "l"],
+    ["k", "l", "h"],
+    ["l", "h", "k"],
+    ["-h", "-k", "-l"],
+    ["-k", "-l", "-h"],
+    ["-l", "-h", "-k"]
+  ],
+
+  "-3m": [
+    ["h", "k", "l"],
+    ["k", "l", "h"],
+    ["l", "h", "k"],
+    ["-h", "-k", "l"],
+    ["-k", "-l", "h"],
+    ["-l", "-h", "k"],
+    ["h", "k", "-l"],
+    ["k", "l", "-h"],
+    ["l", "h", "-k"],
+    ["-h", "-k", "-l"],
+    ["-k", "-l", "-h"],
+    ["-l", "-h", "-k"]
+  ],
+
+  "6/m": [
+    ["h", "k", "l"],
+    ["-k", "h+k", "l"],
+    ["-h-k", "h", "l"],
+    ["-h", "-k", "l"],
+    ["k", "-h-k", "l"],
+    ["h+k", "-h", "l"],
+    ["h", "k", "-l"],
+    ["-k", "h+k", "-l"],
+    ["-h-k", "h", "-l"],
+    ["-h", "-k", "-l"],
+    ["k", "-h-k", "-l"],
+    ["h+k", "-h", "-l"]
+  ],
+
+  "6/mmm": [
+    ["h", "k", "l"],
+    ["-k", "h+k", "l"],
+    ["-h-k", "h", "l"],
+    ["-h", "-k", "l"],
+    ["k", "-h-k", "l"],
+    ["h+k", "-h", "l"],
+    ["h", "k", "-l"],
+    ["-k", "h+k", "-l"],
+    ["-h-k", "h", "-l"],
+    ["-h", "-k", "-l"],
+    ["k", "-h-k", "-l"],
+    ["h+k", "-h", "-l"]
+  ],
+
+  "m-3": [
+    ["h", "k", "l"],
+    ["h", "l", "k"],
+    ["k", "h", "l"],
+    ["k", "l", "h"],
+    ["l", "h", "k"],
+    ["l", "k", "h"],
+    ["-h", "-k", "l"],
+    ["-h", "-l", "k"],
+    ["-k", "-h", "l"],
+    ["-k", "-l", "h"],
+    ["-l", "-h", "k"],
+    ["-l", "-k", "h"]
+  ],
+
+  "m-3m": [
+    ["h", "k", "l"],
+    ["h", "l", "k"],
+    ["k", "h", "l"],
+    ["k", "l", "h"],
+    ["l", "h", "k"],
+    ["l", "k", "h"],
+    ["-h", "-k", "l"],
+    ["-h", "-l", "k"],
+    ["-k", "-h", "l"],
+    ["-k", "-l", "h"],
+    ["-l", "-h", "k"],
+    ["-l", "-k", "h"],
+    ["h", "k", "-l"],
+    ["h", "l", "-k"],
+    ["k", "h", "-l"],
+    ["k", "l", "-h"],
+    ["l", "h", "-k"],
+    ["l", "k", "-h"],
+    ["-h", "-k", "-l"],
+    ["-h", "-l", "-k"],
+    ["-k", "-h", "-l"],
+    ["-k", "-l", "-h"],
+    ["-l", "-h", "-k"],
+    ["-l", "-k", "-h"]
+  ]
+};
+
+// ---------------------------------------------
+// Safe arithmetic evaluator for expressions like "h+k", "-h", "h-k+l"
+// ---------------------------------------------
+function evalExpr(expr, h, k, l) {
+  return Function("h", "k", "l", `"use strict"; return (${expr});`)(h, k, l);
+}
+
+// ---------------------------------------------
+// Main function: return symmetry-equivalent HKLs
+// ---------------------------------------------
+function getSymmetryEquivalents(laueClass, h, k, l) {
+  const ops = LAUE_OPERATORS[laueClass];
+  if (!ops) throw new Error(`Unknown Laue class: ${laueClass}`);
+
+  const results = [];
+
+  for (const op of ops) {
+    const h2 = evalExpr(op[0], h, k, l);
+    const k2 = evalExpr(op[1], h, k, l);
+    const l2 = evalExpr(op[2], h, k, l);
+
+    const triplet = [h2, k2, l2];
+    const key = triplet.toString();
+
+    if (!results.some(x => x.toString() === key)) {
+      results.push(triplet);
+    }
+  }
+
+  return results;
+}
+
 function generateHKLs(point_group, h, k, l, fpairs) {
   const equiv_hkls = [];
   const allhkls = [];
@@ -296,7 +483,7 @@ function generateHKLs(point_group, h, k, l, fpairs) {
 			};
 		}
 		
-		allhkls = generateHKLs(pointGroup, h, k, l, true)
+		allhkls = getSymmetryEquivalents(pointGroup, h, k, l)
 
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
