@@ -484,16 +484,17 @@ function generateHKLs(point_group, h, k, l, fpairs) {
 		}
 		
 		allhkls = getSymmetryEquivalents(pointGroup, h, k, l)
-
+		let html = "<h3>Symmetry‑Equivalent Miller Indices</h3><ul>";
+		
+		  for (const hkl of list) {
+			html += `<li>(${hkl[0]}, ${hkl[1]}, ${hkl[2]})</li>`;
+		  }
+		
+		  html += "</ul>";
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
         outputDiv.style.display = 'block';
-        outputDiv.innerHTML = `
-            <strong>Submission Received:</strong><br>
-            • Point Group: <strong>${pointGroup}</strong><br>
-            • Miller Indices: <strong>(${h} ${k} ${l})</strong>
-            • Equivalent HKLs: <strong>(${allhkls})</strong>
-        `;
+        outputDiv.innerHTML = html;
     }
 </script>
 
