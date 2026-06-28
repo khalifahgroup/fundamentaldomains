@@ -191,42 +191,6 @@
         const k = document.getElementById('kIndex').value;
         const l = document.getElementById('lIndex').value;
 
-
-        for (const base_hkl in point_group) {
-            if (
-                ((h === 0) === (base_hkl[0] === '0') &&
-                (k === 0) === (base_hkl[1] === '0') &&
-                (l === 0) === (base_hkl[2] === '0')) ||
-                base_hkl === 'hkl'
-            ) {
-                for (const equiv of point_group[base_hkl]) {
-                    const equiv_hkl =;
-                    for (let i = 0; i < 3; i++) {
-                        let expression = equiv[i];
-                        expression = expression.replace(/h/g, String(h))
-                                            .replace(/k/g, String(k))
-                                            .replace(/l/g, String(l));
-                        equiv_hkl[i] = Function(`"use strict"; return (${expression})`)();
-                    }
-                    equiv_hkls.push(equiv_hkl);
-                    if (fpairs || centric_groups.includes(this.data['point_group'])) {
-                        equiv_hkls.push(equiv_hkl.map(i => -i)); // add Friedel pair for centric groups
-                    }
-                }
-            }
-        }
-
-        for (const equiv of equiv_hkls) {
-            // JavaScript arrays compare by reference, so we use string serialization for uniqueness check
-            const hklKey = JSON.stringify(equiv);
-            if (!allhkls.some(item => JSON.stringify(item) === hklKey)) {
-                allhkls.push(equiv);
-            }
-        }
-
-
-
-
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
         outputDiv.style.display = 'block';
