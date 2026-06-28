@@ -191,7 +191,7 @@
         const k = document.getElementById('kIndex').value;
         const l = document.getElementById('lIndex').value;
 
-        if pointGroup == "-1":
+        if (pointGroup == "-1"){
             const eq_json = {
                 "hkl": [
                     [
@@ -243,6 +243,7 @@
                     ]
                 ]
             }
+        }
 
         for (const base_hkl in eq_json) {
             if (
