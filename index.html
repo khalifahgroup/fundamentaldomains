@@ -123,35 +123,35 @@
                 <option value="" disabled selected>-- Select Laue class --</option>
                 
                 <optgroup label="Triclinic">
-                    <option value="-1">-1</option>
+                    <option value="-1">-1 (Ci)</option>
                 </optgroup>
                 
                 <optgroup label="Monoclinic">
-                    <option value="2/m">2/m</option>
+                    <option value="2/m">2/m (C2h)</option>
                 </optgroup>
                 
                 <optgroup label="Orthorhombic">
-                    <option value="mmm">mmm</option>
+                    <option value="mmm">mmm (D2h / Vh)</option>
                 </optgroup>
                 
                 <optgroup label="Tetragonal">
-                    <option value="4/m">4/m</option>
-                    <option value="4/mmm">4/mmm</option>
+                    <option value="4/m">4/m (C4h)</option>
+                    <option value="4/mmm">4/mmm (D4h)</option>
                 </optgroup>
                 
                 <optgroup label="Trigonal">
-                    <option value="-3">-3</option>
-                    <option value="-3m">-3m</option>
+                    <option value="-3">-3 (C3i / S6)</option>
+                    <option value="-3m">-3m (D3d)</option>
                 </optgroup>
                 
                 <optgroup label="Hexagonal">
-                    <option value="6/m">6/m</option>
-                    <option value="6/mmm">6/mmm</option>
+                    <option value="6/m">6/m (C6h)</option>
+                    <option value="6/mmm">6/mmm (D6h)</option>
                 </optgroup>
                 
                 <optgroup label="Cubic">
-                    <option value="m-3">m-3</option>
-                    <option value="m-3m">m-3m</option>
+                    <option value="m-3">m-3 (Th)</option>
+                    <option value="m-3m">m-3m (Oh)</option>
                 </optgroup>
             </select>
         </div>
@@ -181,244 +181,6 @@
 </div>
 
 <script>
-// ---------------------------------------------
-// 11 Laue classes and their symmetry operators
-// Each operator is a triple of expressions in h,k,l
-// ---------------------------------------------
-const LAUE_OPERATORS = {
-  "-1": [
-    ["h", "k", "l"],
-    ["-h", "-k", "-l"]
-  ],
-
-  "2/m": [
-    ["h", "k", "l"],
-    ["-h", "-k", "l"],
-    ["h", "-k", "-l"],
-    ["-h", "k", "-l"]
-  ],
-
-  "mmm": [
-    ["h", "k", "l"],
-    ["-h", "k", "l"],
-    ["h", "-k", "l"],
-    ["h", "k", "-l"],
-    ["-h", "-k", "l"],
-    ["-h", "k", "-l"],
-    ["h", "-k", "-l"],
-    ["-h", "-k", "-l"]
-  ],
-
-  "4/m": [
-    ["h", "k", "l"],
-    ["-k", "h", "l"],
-    ["-h", "-k", "l"],
-    ["k", "-h", "l"],
-    ["h", "k", "-l"],
-    ["-k", "h", "-l"],
-    ["-h", "-k", "-l"],
-    ["k", "-h", "-l"]
-  ],
-
-  "4/mmm": [
-    ["h", "k", "l"],
-    ["-k", "h", "l"],
-    ["-h", "-k", "l"],
-    ["k", "-h", "l"],
-    ["h", "k", "-l"],
-    ["-k", "h", "-l"],
-    ["-h", "-k", "-l"],
-    ["k", "-h", "-l"],
-    ["k", "h", "l"],
-    ["-h", "k", "l"],
-    ["-k", "-h", "l"],
-    ["h", "-k", "l"],
-    ["k", "h", "-l"],
-    ["-h", "k", "-l"],
-    ["-k", "-h", "-l"],
-    ["h", "-k", "-l"]
-  ],
-
-  "-3": [
-    ["h", "k", "l"],
-    ["k", "l", "h"],
-    ["l", "h", "k"],
-    ["-h", "-k", "-l"],
-    ["-k", "-l", "-h"],
-    ["-l", "-h", "-k"]
-  ],
-
-  "-3m": [
-    ["h", "k", "l"],
-    ["k", "l", "h"],
-    ["l", "h", "k"],
-    ["-h", "-k", "l"],
-    ["-k", "-l", "h"],
-    ["-l", "-h", "k"],
-    ["h", "k", "-l"],
-    ["k", "l", "-h"],
-    ["l", "h", "-k"],
-    ["-h", "-k", "-l"],
-    ["-k", "-l", "-h"],
-    ["-l", "-h", "-k"]
-  ],
-
-  "6/m": [
-    ["h", "k", "l"],
-    ["-k", "h+k", "l"],
-    ["-h-k", "h", "l"],
-    ["-h", "-k", "l"],
-    ["k", "-h-k", "l"],
-    ["h+k", "-h", "l"],
-    ["h", "k", "-l"],
-    ["-k", "h+k", "-l"],
-    ["-h-k", "h", "-l"],
-    ["-h", "-k", "-l"],
-    ["k", "-h-k", "-l"],
-    ["h+k", "-h", "-l"]
-  ],
-
-  "6/mmm": [
-    ["h", "k", "l"],
-    ["-k", "h+k", "l"],
-    ["-h-k", "h", "l"],
-    ["-h", "-k", "l"],
-    ["k", "-h-k", "l"],
-    ["h+k", "-h", "l"],
-    ["h", "k", "-l"],
-    ["-k", "h+k", "-l"],
-    ["-h-k", "h", "-l"],
-    ["-h", "-k", "-l"],
-    ["k", "-h-k", "-l"],
-    ["h+k", "-h", "-l"]
-  ],
-
-  "m-3": [
-    ["h", "k", "l"],
-    ["h", "l", "k"],
-    ["k", "h", "l"],
-    ["k", "l", "h"],
-    ["l", "h", "k"],
-    ["l", "k", "h"],
-    ["-h", "-k", "l"],
-    ["-h", "-l", "k"],
-    ["-k", "-h", "l"],
-    ["-k", "-l", "h"],
-    ["-l", "-h", "k"],
-    ["-l", "-k", "h"]
-  ],
-
-  "m-3m": [
-    ["h", "k", "l"],
-    ["h", "l", "k"],
-    ["k", "h", "l"],
-    ["k", "l", "h"],
-    ["l", "h", "k"],
-    ["l", "k", "h"],
-    ["-h", "-k", "l"],
-    ["-h", "-l", "k"],
-    ["-k", "-h", "l"],
-    ["-k", "-l", "h"],
-    ["-l", "-h", "k"],
-    ["-l", "-k", "h"],
-    ["h", "k", "-l"],
-    ["h", "l", "-k"],
-    ["k", "h", "-l"],
-    ["k", "l", "-h"],
-    ["l", "h", "-k"],
-    ["l", "k", "-h"],
-    ["-h", "-k", "-l"],
-    ["-h", "-l", "-k"],
-    ["-k", "-h", "-l"],
-    ["-k", "-l", "-h"],
-    ["-l", "-h", "-k"],
-    ["-l", "-k", "-h"]
-  ]
-};
-
-// ---------------------------------------------
-// Safe arithmetic evaluator for expressions like "h+k", "-h", "h-k+l"
-// ---------------------------------------------
-function evalExpr(expr, h, k, l) {
-  return Function("h", "k", "l", `"use strict"; return (${expr});`)(h, k, l);
-}
-
-// ---------------------------------------------
-// Main function: return symmetry-equivalent HKLs
-// ---------------------------------------------
-function getSymmetryEquivalents(laueClass, h, k, l) {
-  const ops = LAUE_OPERATORS[laueClass];
-  if (!ops) throw new Error(`Unknown Laue class: ${laueClass}`);
-
-  const results = [];
-
-  for (const op of ops) {
-    const h2 = evalExpr(op[0], h, k, l);
-    const k2 = evalExpr(op[1], h, k, l);
-    const l2 = evalExpr(op[2], h, k, l);
-
-    const triplet = [h2, k2, l2];
-    const key = triplet.toString();
-
-    if (!results.some(x => x.toString() === key)) {
-      results.push(triplet);
-    }
-  }
-
-  return results;
-}
-
-function generateHKLs(point_group, h, k, l, fpairs) {
-  const equiv_hkls = [];
-  const allhkls = [];
-
-  const isZero = x => x === 0;
-
-  for (const base_hkl in point_group) {
-    const cond =
-      (
-        (isZero(h) === (base_hkl[0] === "0")) &&
-        (isZero(k) === (base_hkl[1] === "0")) &&
-        (isZero(l) === (base_hkl[2] === "0"))
-      ) ||
-      base_hkl === "hkl";
-
-    if (cond) {
-      for (const equiv of point_group[base_hkl]) {
-        const equiv_hkl = [0, 0, 0];
-
-        for (let i = 0; i < 3; i++) {
-          let expression = equiv[i]
-            .replace(/h/g, h.toString())
-            .replace(/k/g, k.toString())
-            .replace(/l/g, l.toString());
-
-          // Safe arithmetic evaluation
-          equiv_hkl[i] = Function(`"use strict"; return (${expression});`)();
-        }
-
-        equiv_hkls.push(equiv_hkl);
-
-        if (fpairs) {
-          equiv_hkls.push(equiv_hkl.map(v => -v));
-        }
-      }
-    }
-  }
-
-  // Deduplicate
-  for (const equiv of equiv_hkls) {
-    const key = equiv.toString();
-    if (!allhkls.some(x => x.toString() === key)) {
-      allhkls.push(equiv);
-    }
-  }
-
-  return allhkls;
-}
-
-
-	
     function handleSubmit(event) {
         // Prevent page from refreshing on form submission
         event.preventDefault();
@@ -429,72 +191,50 @@ function generateHKLs(point_group, h, k, l, fpairs) {
         const k = document.getElementById('kIndex').value;
         const l = document.getElementById('lIndex').value;
 
-		if (pointGroup == "-1"): {
-			const json_obj = {
-			  "hkl": [
-				[
-				  "h",
-				  " k",
-				  " l"
-				]
-			  ],
-			  "hk0": [
-				[
-				  "h",
-				  " k",
-				  " 0"
-				]
-			  ],
-			  "h0l": [
-				[
-				  "h",
-				  " 0",
-				  " l"
-				]
-			  ],
-			  "0kl": [
-				[
-				  "0",
-				  " k",
-				  " l"
-				]
-			  ],
-			  "h00": [
-				[
-				  "h",
-				  " 0",
-				  " 0"
-				]
-			  ],
-			  "0k0": [
-				[
-				  "0",
-				  " k",
-				  " 0"
-				]
-			  ],
-			  "00l": [
-				[
-				  "0",
-				  " 0",
-				  " l"
-				]
-			  ]
-			};
-		}
-		
-		allhkls = getSymmetryEquivalents(pointGroup, h, k, l)
-		let html = "<h3>Symmetry‑Equivalent Miller Indices</h3><ul>";
-		
-		  for (const hkl of list) {
-			html += `<li>(${hkl[0]}, ${hkl[1]}, ${hkl[2]})</li>`;
-		  }
-		
-		  html += "</ul>";
+
+        for (const base_hkl in point_group) {
+            if (
+                ((h === 0) === (base_hkl[0] === '0') &&
+                (k === 0) === (base_hkl[1] === '0') &&
+                (l === 0) === (base_hkl[2] === '0')) ||
+                base_hkl === 'hkl'
+            ) {
+                for (const equiv of point_group[base_hkl]) {
+                    const equiv_hkl =;
+                    for (let i = 0; i < 3; i++) {
+                        let expression = equiv[i];
+                        expression = expression.replace(/h/g, String(h))
+                                            .replace(/k/g, String(k))
+                                            .replace(/l/g, String(l));
+                        equiv_hkl[i] = Function(`"use strict"; return (${expression})`)();
+                    }
+                    equiv_hkls.push(equiv_hkl);
+                    if (fpairs || centric_groups.includes(this.data['point_group'])) {
+                        equiv_hkls.push(equiv_hkl.map(i => -i)); // add Friedel pair for centric groups
+                    }
+                }
+            }
+        }
+
+        for (const equiv of equiv_hkls) {
+            // JavaScript arrays compare by reference, so we use string serialization for uniqueness check
+            const hklKey = JSON.stringify(equiv);
+            if (!allhkls.some(item => JSON.stringify(item) === hklKey)) {
+                allhkls.push(equiv);
+            }
+        }
+
+
+
+
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
         outputDiv.style.display = 'block';
-        outputDiv.innerHTML = html;
+        outputDiv.innerHTML = `
+            <strong>Submission Received:</strong><br>
+            • Point Group: <strong>${pointGroup}</strong><br>
+            • Miller Indices: <strong>(${h} ${k} ${l})</strong>
+        `;
     }
 </script>
 
