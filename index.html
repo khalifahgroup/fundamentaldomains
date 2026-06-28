@@ -202,10 +202,7 @@
         // Display the results dynamically
         const outputDiv = document.getElementById('output');
         outputDiv.style.display = 'block';
-        outputDiv.innerHTML = `
-            • Point Group: <strong>${pointGroup}</strong>
-            • Miller Indices: <strong>(${allhkls})</strong>
-        `;
+        outputDiv.innerHTML = allhkls;
     }
 </script>
 
